@@ -63,8 +63,8 @@ class BST {
     out.emplace_back(node->key, node->count);
     collect(node->right, out);
   }
- public:
 
+ public:
   BST() : root(nullptr) {}
 
   ~BST() {
