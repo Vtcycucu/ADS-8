@@ -2,26 +2,26 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <vector>
-#include <algorithm>
 #include <cctype>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <utility>
 
 #include "bst.h"
 
 void makeTree(BST<std::string>& tree, const char* filename) {
     std::ifstream file(filename);
 
-    if (!file) {
+    if (!file.is_open()) {
         std::cout << "File error" << std::endl;
         return;
     }
-
     std::string word;
     char ch;
+    
     while (file.get(ch)) {
         unsigned char c = static_cast<unsigned char>(ch);
-
         if (std::isalpha(c)) {
             word += static_cast<char>(std::tolower(c));
         } else {
@@ -34,18 +34,20 @@ void makeTree(BST<std::string>& tree, const char* filename) {
     if (!word.empty()) {
         tree.insert(word);
     }
+    file.close();
 }
 
 void printFreq(BST<std::string>& tree) {
-    auto words = tree.getAllWords();
+    std::vector<std::pair<std::string, int>> words = tree.getData();
 
-    std::sort(words.begin(), words.end(),
-        [](const auto& a, const auto& b) {
+    std::sort(words.begin(), words.end(), [](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
             return a.second > b.second;
         });
     std::ofstream out("result/freq.txt");
-    for (const auto& w : words) {
-        std::cout << w.first << " " << w.second << "\n";
-        out << w.first << " " << w.second << "\n";
+    for (const auto& e : words) {
+        std::cout << e.first << " " << e.second << std::endl;
+        out << e.first << " " << e.second << std::endl;
     }
+
+    out.close();
 }
