@@ -19,7 +19,6 @@ void makeTree(BST<std::string>& tree, const char* filename) {
     }
     std::string word;
     char ch;
-    
     while (file.get(ch)) {
         unsigned char c = static_cast<unsigned char>(ch);
         if (std::isalpha(c)) {
