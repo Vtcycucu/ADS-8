@@ -1,11 +1,9 @@
-// Copyright 2021 NNTU-CS
 #ifndef INCLUDE_BST_H_
 #define INCLUDE_BST_H_
 
-#include <iostream>
 #include <vector>
-#include <algorithm>
 #include <utility>
+#include <algorithm>
 
 template<typename T>
 class BST {
@@ -16,12 +14,8 @@ class BST {
     Node* left;
     Node* right;
 
-    explicit Node(const T& value) {
-      key = value;
-      count = 1;
-      left = nullptr;
-      right = nullptr;
-    }
+    explicit Node(const T& value)
+        : key(value), count(1), left(nullptr), right(nullptr) {}
   };
   Node* root;
   void clear(Node* node) {
@@ -33,7 +27,6 @@ class BST {
 
   Node* insert(Node* node, const T& value) {
     if (!node) return new Node(value);
-
     if (value < node->key) {
       node->left = insert(node->left, value);
     } else if (value > node->key) {
@@ -44,18 +37,24 @@ class BST {
     return node;
   }
 
-  bool search(Node* node, const T& value) const {
-    if (!node) return false;
-    if (value == node->key) return true;
-    if (value < node->key)
-      return search(node->left, value);
+  int search(Node* node, const T& value) const {
+    if (!node) return 0;
+
+    if (value == node->key) return node->count;
+    if (value < node->key) return search(node->left, value);
 
     return search(node->right, value);
   }
+
   int depth(Node* node) const {
     if (!node) return 0;
-    return 1 + std::max(depth(node->left), depth(node->right));
+
+    int l = depth(node->left);
+    int r = depth(node->right);
+
+    return std::max(l, r) + 1;
   }
+
   void collect(Node* node, std::vector<std::pair<T, int>>& out) const {
     if (!node) return;
 
@@ -66,26 +65,23 @@ class BST {
 
  public:
   BST() : root(nullptr) {}
-
   ~BST() {
     clear(root);
   }
   void insert(const T& value) {
     root = insert(root, value);
   }
-  bool search(const T& value) const {
+  int search(const T& value) const {
     return search(root, value);
   }
   int depth() const {
-    return depth(root);
+    if (!root) return 0;
+    return depth(root) - 1;
   }
-  std::vector<std::pair<T, int>> getAllWords() const {
+  std::vector<std::pair<T, int>> getData() const {
     std::vector<std::pair<T, int>> res;
     collect(root, res);
     return res;
-  }
-  std::vector<std::pair<T, int>> getData() const {
-    return getAllWords();
   }
 };
 
