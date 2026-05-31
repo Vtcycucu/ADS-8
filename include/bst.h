@@ -1,3 +1,4 @@
+// Copyright 2021 NNTU-CS
 #ifndef INCLUDE_BST_H_
 #define INCLUDE_BST_H_
 
@@ -63,6 +64,7 @@ class BST {
     collect(node->right, out);
   }
  public:
+
   BST() : root(nullptr) {}
 
   ~BST() {
